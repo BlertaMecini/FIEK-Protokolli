@@ -28,7 +28,7 @@ Klienti është në gjendje të thërras kërkesat dhe të merr përgjigjie nga 
 ### Kontribuesit 
 [BlertaMecini](https://github.com/BlertaMecini)
 <a href="https://github.com/BlertaMecini/FIEK-protokolli/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=FIEK-protokolli/INT20_21_Gr16"/>
+<img src="https://contrib.rocks/image?repo=FIEK-protokolli/INT20_21_Gr16">
 </a>
 ### Licensa 
-Ky projekt është i licensuar nën licensën MIT - shikoni skedarin [LICENSE.md](LICENSE.md) për detaje.
+Ky projekt është i licensuar nën licensën MIT - shikoni skedarin [LICENSE.md](https://github.com/BlertaMecini/FIEK-Protokolli/blob/main/LICENSE) për detaje.
