@@ -7,6 +7,6 @@
     "\\FIEK-TCP\\TCPserver",
     "\\FIEK-TCP\\TCPserver\\TCPserver"
   ],
-  "SelectedNode": "\\FIEK-TCP\\TCPclient\\TCPclient\\TCPclient.py",
+  "SelectedNode": "\\FIEK-TCP\\TCPserver\\TCPserver\\TCPserver.py",
   "PreviewInSolutionExplorer": false
 }

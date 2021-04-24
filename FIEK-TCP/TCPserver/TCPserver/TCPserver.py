@@ -13,8 +13,10 @@ address=(serverName,serverPort)  #Adresa eshte qift i hostit dhe portit
 
 #Krijimi i soketit. Argumentet e pasuara në socket () specifikojnë familjen e adresave dhe llojin e soketit
 #AF_INET është familja e adresave për IPv4. SOCK_STREAM është lloji i soketit për TCP protokollin
-serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+try:
+    serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+except socket.error as err: #Nese ndodh gabim gjate krijimit te soketit, shfaqet gabimi
+    print(str(err))
 try: #Serveri tenton te lidhet me klientin permes metodes bind(), ku si parameter e merr adresen(hosti,porti)
     serverSocket.bind(address)
     print("\nServeri eshte startuar ne localhost ne portin " + str(serverPort)+".")
@@ -33,10 +35,13 @@ def handle_connections(clientS,addr): #Metod per trajtimin e kerkesave te klient
         return "Klienti eshte duke perdorur portin: "+str(addr[1])
 
     def ANASJELLTAS(x): #Metoda ANASJELLTAS tekstin e dhene e kthen anasjelltas (reverse)
-        return "Teksti i kthyer anasjelltas: "+ x[::-1] 
+        x=re.sub(r"^\s+|\s+$", "", x)
+        if len(x)==1 or len(x)==0:
+            return "Keni dhene vetem zbrazetira ose/dhe vetem nje karakter"
+        else:
+            return "Teksti i kthyer anasjelltas: "+ x[::-1] 
         
     def PALINDROM(text): #Metoda PALINDROM tregon nese teksti shkruhet njejt ne te dyja anet, eshte palindrom
-        text = re.sub(r"[^a-zA-Z]","",text)
         reversedText=text[::-1] 
         if  reversedText==text: 
             return "Teksti i dhene eshte palindrom."
@@ -68,22 +73,25 @@ def handle_connections(clientS,addr): #Metod per trajtimin e kerkesave te klient
         return "Teksti i dhene ka "+ str(vowel)+ " zanore dhe "+str(constant)+" bashketingellore"
     
     def GCF(num1,num2): #Metoda GCF kthen faktorin me te madh te perbashket te dy numrave 
-        gcdResult=math.gcd(num1,num2)
+        if num1.isnumeric()==False or num2.isnumeric()==False:
+            return "Nuk keni dhene vetem dy numra valid!"
+        gcdResult=math.gcd(int(num1),int(num2))
         return "Faktori me i madh i perbashket i dy numrave te dhene eshte: "+str(gcdResult)
 
     def KONVERTO(mode,number): #Metoda KONVERTO eshte nje lloj kalkulatori per disa konvertime 
-        converted=0
+        if number.isnumeric()==False:
+            return("Nuk keni dhene numer valid!")
         if mode=="cmNeInch":  
-            converted=number/2.54
+            converted=int(number)/2.54
             return "Numri "+str(number)+" cm, i konvertuar ne inch= "+str(round(converted, 3)) 
         elif mode=="inchNeCm":  
-            converted=number*2.54
+            converted=int(number)*2.54
             return "Numri "+str(number)+" inch, i konvertuar ne cm= "+str(round(converted, 3))
         elif mode=="kmNeMiles":  
-            converted=number*0.621371
+            converted=int(number)*0.621371
             return "Numri "+str(number)+" km, i konvertuar ne milje= "+str(round(converted, 3))
         elif mode=="mileNeKm":  
-            converted=number/0.621371
+            converted=int(number)/0.621371
             return "Numri "+str(number)+" milje, i konvertuar ne km= "+str(round(converted, 3))
         else:
             return "Ky konvertim nuk ekziston!"
@@ -111,31 +119,33 @@ def handle_connections(clientS,addr): #Metod per trajtimin e kerkesave te klient
                 return n 
             else:
                 return (fibRecursion(n-1)+fibRecursion(n-2))  
-        
-        if n<='0':
-            return ("Keni dhene numer negativ ose 0 prandaj nuk mund te gjenerohet sekuenca Fibonacci!")
-        elif n.isnumeric()==False:
+        n=re.sub(r"^\s+|\s+$", "", n)
+        if n.isnumeric()==False:
             return ("Nuk kemi dhene numer valid, prandaj nuk mund te gjenerohet sekuenca Fibonacci!")
-          
+        elif int(n)<=0:
+            return ("Keni dhene numer negativ ose 0 prandaj nuk mund te gjenerohet sekuenca Fibonacci!") 
         i=0
         result=""
-        while i<n:
+        while i<int(n):
             result+= (" "+str(fibRecursion(i)))
             i+=1
         return "Sekuenca Fibonacci: "+ result
+
        
-    while True:  #Unaze e pafundme. Perderisa serveri eshte duke degjuar tentojme te marrim kerkesat e klientit dhe thirrim metodat perkatese
+    while True:  #Unaze e pafundme. Perderisa serveri eshte duke degjuar tentojme te marrim kerkesat e klientit 
         try:
             request = clientS.recv(128)
         except socket.error as err:
             print(str(err))
             break
             
-        request=str(request.decode('utf-8'))
-        if len(request)<=0:
+        if len(request)<=0: 
+            print("Klienti nuk ka dhene kerkese prandaj lidhja eshte mbyllur.")    
             break
+
+        request=str(request.decode('utf-8'))  #Dekodimi i kerkeses 
         print("Kerkesa nga klienti: "+ request+"\n") 
-            
+        #Ne baze te kerkesave  thirrim metodat perkatese    
         response = ''
         if request== 'KOHA':
             response = str(KOHA())
@@ -146,11 +156,14 @@ def handle_connections(clientS,addr): #Metod per trajtimin e kerkesave te klient
         elif request == 'NRPORTIT':
             response= str(NRPORTIT())
 
-        elif request=='PALINDROM':
+        elif request=='PALINDROM' or request=='PALINDROM ':
             response="Nuk keni dhene asnje tekst!"
         elif request.split(" ",1)[0] == 'PALINDROM':
-            txt=request.split(" ",1)[1]
-            response=str(PALINDROM(txt))
+            if re.match("^[0-9 ]+$",request.split(" ",1)[1]):
+                response="Keni dhene vetem hapesira dhe/ose numra!"
+            else:
+                txt=request.split(" ",1)[1]
+                response=str(PALINDROM(txt))
 
         elif request == 'LOJA':
             response= str(LOJA())
@@ -164,37 +177,49 @@ def handle_connections(clientS,addr): #Metod per trajtimin e kerkesave te klient
 
         elif request == 'GCF':
             response="Duhet te jepni 2 numra!"
-        elif request.split(" ")[0] == 'GCF':      
-            num1=int(request.split(' ')[1])
-            num2=int(request.split(' ')[2])
-            response= str(GCF(num1,num2))
+        elif request.split(" ",1)[0] == 'GCF':
+            numbers=request.split(" ",1)[1]   
+            num1=numbers.split(' ',1)[0]
+         
+            if len(numbers)<len(num1+" "):
+                response="Keni dhene vetem nje numer!"
+            else:
+                num2=numbers.split(' ',1)[1]
+                response=str(GCF(num1,num2))
 
-        elif request == 'NUMERO':
+        elif request == 'NUMERO' or request == 'NUMERO ' :
             response="Nuk keni dhene asnje tekst!"
         elif request.split(" ",1)[0] == 'NUMERO':
-            response=str(NUMERO(request.split(" ",1)[1]))
+            if re.match("^[0-9 ]+$",request.split(" ",1)[1]):
+                response="Keni dhene vetem hapesira dhe/ose numra!"
+            else:
+                response=str(NUMERO(request.split(" ",1)[1]))
 
         elif request == 'KONVERTO':
             response=("\nModet e konvertimit:\n"+
-                "1.Për konvertimin cm në inch shtypni cmNeInch\n"+
-                "2.Për konvertimin inch në cm shtypni inchNeCm\n"+
-                "3.Për konvertimin km në milje shtypni kmNeMiles\n"+
-                "4.Për konvertimin milje në km shtypni mileNeKm\n\n"+
-                "Shtypni modin e konvertimit dhe numrin qe deshironi ta konvertoni si: "+
-                "KONVERTO{Hapesire}{Modi}{Hapesire}{Numri}")
+                    "1.Per konvertimin cm ne inch shtypni cmaNeInch\n"+
+                    "2.Per konvertimin inch ne cm shtypni inchNeCm\n"+
+                    "3.Per konvertimin km ne milje shtypni kmNeMiles\n"+
+                    "4.Per konvertimin milje ne km shtypni mileNeKm\n\n"+
+                    "Duhet ta shtypni modin e konvertimit dhe numrin qe deshironi ta konvertoni si: "+
+                    "KONVERTO{Hapesire}{Modi}{Hapesire}{Numri}")
             
-        elif request.split(' ')[0] == 'KONVERTO':
-            mode=str(request.split(' ')[1])
-            number=int(request.split(' ')[2])
-            response= str(KONVERTO(mode,number))
+        elif request.split(' ',1)[0] == 'KONVERTO':
+            parameters=request.split(" ",1)[1]   
+            mode=parameters.split(' ',1)[0]
+            if len(parameters)<len(mode+" "):
+                response="Keni dhene vetem modin e konvertimit!"
+            else:
+                num=parameters.split(' ',1)[1]
+                response=str(KONVERTO(mode,num))
        
         elif request == 'THENJA':
             response= str(THENJA())
 
-        elif request== 'FIBONACCI':
+        elif request== 'FIBONACCI' or request== 'FIBONACCI ':
             response="Duhet te jepni numrin e termave te serise"
-        elif request.split(' ')[0] == 'FIBONACCI':
-            n=request.split(' ')[1]
+        elif request.split(' ',1)[0] == 'FIBONACCI':
+            n=request.split(' ',1)[1]
             response= str(FIBONACCI(n))
 
         elif request == 'PERFUNDO':
@@ -223,5 +248,3 @@ while True:
         print(str(err))
 
 serverSocket.close()  #Mbyllja e soket serverit 
-
-S

@@ -3,7 +3,7 @@
 Protokolli FIEK është një protokoll shumë i thjeshtë që i lejon klientit dhe serverit ti testoj lidhjet e tyre. Ky nuk
 është një protokoll standard. Është TCP versioni i cili quhet FIEK-TCP dhe UDP versioni i cili quhet FIEK-UDP.
 Protokolli FIEK përmban këto kërkesa (metoda): IP, NRPORT, NUMERO, ANASJELLTAS, PALINDROM, KOHA, LOJA,
-KONVERTO dhe GCF te cilat mund te dërgohen nga klienti tek serveri. Serveri përgjigjet me një mesazh i cili është
+KONVERTO, GCF,THENJA,FIBONACCI dhe PERFUNDO te cilat mund te dërgohen nga klienti tek serveri. Serveri përgjigjet me një mesazh i cili është
 specifik për secilën kërkesë (metode). Serveri i injoron kërkesat jovalide dhe nuk duhet dështon në rast
 se pranon një kërkesë te tillë.
 ### FIEK-TCP

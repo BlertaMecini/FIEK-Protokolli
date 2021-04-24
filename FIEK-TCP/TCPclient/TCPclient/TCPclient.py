@@ -32,21 +32,24 @@ print("\nJeni lidhur me serverin, mund të zgjedhni njërin nga operacionet e m�
       +"6.KOHA - per ta zgjedhur shtypni KOHA\n"+line
       +"7.LOJA - per ta zgjedhur shtypni LOJA\n"+line
       +"8.GCF - per ta zgjedhur shtypni GCF{Hapesire}Numri1{Hapesire}Numri2\n"+line
-      +"9.KONVERTO - per ta zgjedhur shtypni KONVERTO\n"+line
+      +"9.KONVERTO - per ta zgjedhur shtypni {Hapesire}{Modi}{Hapesire}{Numri}\n"+line
       +"10.THENJA - per ta zgjedhur shtypni THENJA\n"+line
-      +"11.FIBONACCI - per ta zgjedhur shtypni FIBONACCI{Hapesire}Numri i termave"+line)
-print("--Shtypni PERFUNDO për ta mbyllur programin.--\n"+line)
+      +"11.FIBONACCI - per ta zgjedhur shtypni FIBONACCI{Hapesire}Numri i termave\n"+line
+      +"Shtypni PERFUNDO ose vetem tastin ENTER për ta mbyllur programin.\n"+line)
 
 message=" "
 while True:    #Unaze e pafundme
     request = input("Kerkesa juaj? ")   #Kerkojme nga klienti te shkruaj kerkesen 
-    
     try:  #Tentojme te dergojme kerkesen tek serveri permes sendall, ku kerkesa duhet te enkodohet (default ne formatin utf-8)
         clientSocket.sendall(str.encode(request))
     except socket.error as err:         #Nese ndodh gabim, shfaqet gabimi dhe mbyllet soketi
         print("Ka ndodhur nje gabim gjate dergimit te kerkeses ne server!\n")
         print(str(err))
         break 
+    if not request:                     #Nese klienti nuk jep ndonje kerkese por vetem shtyp enter, soketi mbyllet 
+        print("\nNuk keni dhene asnje kerkese prandaj programi po mbyllet...\n")
+        time.sleep(1)
+        break
     try:  # Tentojme ta marrim pergjigjien nga serveri permes recv   
         receivedResponse=clientSocket.recv(1024)  
     except socket.error as err:        #Nese ndodh gabim, shfaqet gabimi dhe mbyllet soketi
