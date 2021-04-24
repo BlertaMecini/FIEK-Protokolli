@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\FIEK-TCP",
+    "\\FIEK-TCP\\TCPclient",
+    "\\FIEK-TCP\\TCPclient\\TCPclient",
+    "\\FIEK-TCP\\TCPserver",
+    "\\FIEK-TCP\\TCPserver\\TCPserver"
   ],
-  "SelectedNode": "\\TCPclient.sln",
+  "SelectedNode": "\\FIEK-TCP\\TCPclient\\TCPclient\\TCPclient.py",
   "PreviewInSolutionExplorer": false
 }

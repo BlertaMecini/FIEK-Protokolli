@@ -1,471 +1,227 @@
-import socket
-import threading 
-import random
-import math 
-import re
-from datetime import datetime
+#-------------------SOCKET PROGRAMMING-------------------
+#Krijimi i server aplikacionit 
+import socket     #Importojme librarine per socket komunikim ne mes te klientit dhe serverit 
+import threading  #Importojme librarine per thread-a
+import random     #Importojme librarine per marrjen e vlerave te rastesishme 
+import math       #Importojme librarine per funksione matematikore 
+import re         #Importojme librarine per regular expression (shprehje te rregullta)
+from datetime import datetime  #Klasa datetime per daten dhe kohen 
 
+serverName = '127.0.0.1' #IP 
+serverPort = 14000       #Porti
+address=(serverName,serverPort)  #Adresa eshte qift i hostit dhe portit 
 
-serverName = '127.0.0.1'
-serverPort = 14000
-address=(serverName,serverPort)
+#Krijimi i soketit. Argumentet e pasuara nÃ« socket () specifikojnÃ« familjen e adresave dhe llojin e soketit
+#AF_INET Ã«shtÃ« familja e adresave pÃ«r IPv4. SOCK_STREAM Ã«shtÃ« lloji i soketit pÃ«r TCP protokollin
+serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-try:
-    serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+try: #Serveri tenton te lidhet me klientin permes metodes bind(), ku si parameter e merr adresen(hosti,porti)
     serverSocket.bind(address)
-    print("\nServeri është startuar në localhost në portin " + str(serverPort)+".")
-    serverSocket.listen(50) 
-    print("\nServeri është duke punuar dhe është duke pritur për ndonjë kërkesë!")
+    print("\nServeri eshte startuar ne localhost ne portin " + str(serverPort)+".")
+    serverSocket.listen(50)           #Presim per kerkesa permes listen(), 50 paraqet nr e kerkesave qe mund te rrijne ne rend (queue)
+    print("\nServeri eshte duke punuar dhe eshte duke pritur per ndonje kerkese!")
 
-except socket.error as err: 
+except socket.error as err: #Nese ndodh gabim gjate lidhjes, shfaqet gabimi
     print(str(err))
 
-def handle_connections(clientS,addr): 
+def handle_connections(clientS,addr): #Metod per trajtimin e kerkesave te klientit
     
-    def IP(): 
-        return "IP adresa e klientit është: "+str(addr[0])
+    def IP(): #Metoda IP kthen IP adresen e klientit
+        return "IP adresa e klientit eshte: "+str(addr[0])
 
-    def NRPORTIT(): 
-        return "Klienti është duke përdorur portin: "+str(addr[1])
+    def NRPORTIT(): #Metoda NRPORTIT kthen portin e klientit
+        return "Klienti eshte duke perdorur portin: "+str(addr[1])
 
-    def ANASJELLTAS(x):
+    def ANASJELLTAS(x): #Metoda ANASJELLTAS tekstin e dhene e kthen anasjelltas (reverse)
         return "Teksti i kthyer anasjelltas: "+ x[::-1] 
-
-    def PALINDROM(text):
-        reversedText=ANASJELLTAS(text)
+        
+    def PALINDROM(text): #Metoda PALINDROM tregon nese teksti shkruhet njejt ne te dyja anet, eshte palindrom
+        text = re.sub(r"[^a-zA-Z]","",text)
+        reversedText=text[::-1] 
         if  reversedText==text: 
-            return "Teksti i dhënë është palindrom."
+            return "Teksti i dhene eshte palindrom."
         else: 
-            return "Teksti i dhënë nuk është palindrom."
+            return "Teksti i dhene nuk eshte palindrom."
 
-    def LOJA():
+    def LOJA(): #Metoda LOJA kthen 5 numra te rastesishem dhe te sortuar nga 1-35
         listOfNumbers = []
         for number in range(0,5):
             number = random.randint(1,35)
             listOfNumbers.append(number) 
             listOfNumbers.sort()
-        return "5 numra të plotë dhe të sortuar, nga rangu 1-35:\n"+str(listOfNumbers)
+        return "5 numra te plote dhe te sortuar, nga rangu 1-35:\n"+str(listOfNumbers)
 
-    def KOHA():
+    def KOHA(): #Metoda KOHA kthen daten dhe kohen aktuale te serverit 
         currDateTime=datetime.now()
         currDateTimeFormat=currDateTime.strftime("%d/%m/%Y, %H:%M:%S")
-        return "Data dhe koha aktuale: "+currdatetimeFormat
+        return "Data dhe koha aktuale: "+currDateTimeFormat
     
-    def NUMERO(text):
-        text = re.sub(r"[^a-zA-ZëË]"," ",text)
+    def NUMERO(text): #Metoda NUMERO kthen nr e zanoreve dhe bashketingelloreve te teksit te dhene 
+        text = re.sub(r'[^a-zA-Z]','',text)
         vowel=0
         constant=0
         for i in text: 
-            if i=="a" or i=="e" or i=="ë" or i=="i" or i=="o" or i=="u" or i=="y"or  i=="A" or i=="E"  or i=="Ë" or i=="I" or i=="O" or i=="U" or i=="Y":
+            if i=="a" or i=="e" or i=="i" or i=="o" or i=="u" or i=="y"or  i=="A" or i=="E" or i=="I" or i=="O" or i=="U" or i=="Y":
                 vowel+=1      
             else: 
                 constant+=1
-        return "Teksti i dhënë ka "+ str(vowel)+ " zanore dhe "+str(constant)+" bashkëtingëllore"
+        return "Teksti i dhene ka "+ str(vowel)+ " zanore dhe "+str(constant)+" bashketingellore"
     
-    def GCF(num1,num2):
+    def GCF(num1,num2): #Metoda GCF kthen faktorin me te madh te perbashket te dy numrave 
         gcdResult=math.gcd(num1,num2)
-        return "Faktori më i madhë i përbashkët i dy numrave të dhënë është: "+str(gcdResult)
+        return "Faktori me i madh i perbashket i dy numrave te dhene eshte: "+str(gcdResult)
 
-    def KONVERTO(mode,number):
+    def KONVERTO(mode,number): #Metoda KONVERTO eshte nje lloj kalkulatori per disa konvertime 
         converted=0
         if mode=="cmNeInch":  
             converted=number/2.54
-            return "Numri "+str(number)+" cm, i konvertuar në inch= "+str(round(converted, 3)) 
+            return "Numri "+str(number)+" cm, i konvertuar ne inch= "+str(round(converted, 3)) 
         elif mode=="inchNeCm":  
             converted=number*2.54
-            return "Numri "+str(number)+" inch, i konvertuar në cm= "+str(round(converted, 3))
+            return "Numri "+str(number)+" inch, i konvertuar ne cm= "+str(round(converted, 3))
         elif mode=="kmNeMiles":  
             converted=number*0.621371
-            return "Numri "+str(number)+" km, i konvertuar në milje= "+str(round(converted, 3))
+            return "Numri "+str(number)+" km, i konvertuar ne milje= "+str(round(converted, 3))
         elif mode=="mileNeKm":  
             converted=number/0.621371
-            return "Numri "+str(number)+" milje, i konvertuar në km= "+str(round(converted, 3))
+            return "Numri "+str(number)+" milje, i konvertuar ne km= "+str(round(converted, 3))
         else:
             return "Ky konvertim nuk ekziston!"
 
-    while True:
+    def THENJA():  #Metoda THENJA kthen nje thenje te rastesishme nga nje varg i thenjeve
+        quoteArray=["It's not the hours you put in your work that counts, it's the work you put in the hours."
+                    ,"No one would have crossed the ocean if he could have gotten off the ship in the storm."
+                    ,"Better to get hurt by the truth than comforted with a lie."
+                    ,"There is only one sin. and that is theft... when you tell a lie, you steal someones right to the truth."
+                    ,"It always hurts more to have and lose than to not have in the first place."
+                    ,"A society has no chance of success if its women are uneducated..."
+                    ,"People say that eyes are windows to the soul."
+                    ,"They say, Find a purpose in your life and live it. But, sometimes, it is only after you have lived that you recognize your life had a purpose, and likely one you never had in mind."
+                    ,"A fool thinks himself to be wise, but a wise man knows himself to be a fool."
+                    ,"If music be the food of love, play on."
+                    ,"I raise up my voiceâ€”not so that I can shout, but so that those without a voice can be heard. â€¦ We cannot all succeed when half of us are held back."
+                    ,"Feminism isn't about making women stronger. Women are already strong, it's about changing the way the world perceives that strength."
+                    ,"Two things are infinite: the universe and human stupidity; and I'm not sure about the universe."
+                    ,"You only live once, but if you do it right, once is enough."]
+        return "Nje thenje e rastesishme: "+random.choice(quoteArray)
+
+    def FIBONACCI(n): #Metoda FIBONACCI kthen sekuencen fibonacci per nr e termave te dhene 
+        def fibRecursion(n):
+            if n==0 or n==1:
+                return n 
+            else:
+                return (fibRecursion(n-1)+fibRecursion(n-2))  
+        
+        if n<='0':
+            return ("Keni dhene numer negativ ose 0 prandaj nuk mund te gjenerohet sekuenca Fibonacci!")
+        elif n.isnumeric()==False:
+            return ("Nuk kemi dhene numer valid, prandaj nuk mund te gjenerohet sekuenca Fibonacci!")
+          
+        i=0
+        result=""
+        while i<n:
+            result+= (" "+str(fibRecursion(i)))
+            i+=1
+        return "Sekuenca Fibonacci: "+ result
+       
+    while True:  #Unaze e pafundme. Perderisa serveri eshte duke degjuar tentojme te marrim kerkesat e klientit dhe thirrim metodat perkatese
         try:
-            request = clientS.recv(1024)
-            print("Kërkesa nga klienti: "+ str(request.decode('utf-8'))+"\n") 
-            if len(request)<=0:
-                break
-            response = ''
-            if str(request.decode('utf-8')) == 'KOHA':
-                response = str(KOHA())
-
-            elif str(request.decode('utf-8')) == 'IP':
-                response= str(IP())
-
-            elif str(request.decode('utf-8')) == 'NRPORTIT':
-                response= str(NRPORTIT())
-
-            elif str(request.decode('utf-8')) == 'PALINDROM':
-                request = clientS.recv(1024)
-                response=str(PALINDROM(str(request.decode('utf-8'))))
-
-            elif str(request.decode('utf-8')) == 'LOJA':
-                response= str(LOJA())
-
-            elif str(request.decode('utf-8')) == 'ANASJELLTAS':
-                request = clientS.recv(1024)
-                response=str(ANASJELLTAS(str(request.decode('utf-8'))))
-
-            elif str(request.decode('utf-8')) == 'GCF':
-                request = clientS.recv(1024).decode('utf-8')
-                num1=int(request.split(' ')[0])
-                num2=int(request.split(' ')[1])
-                response= str(GCF(num1,num2))
-
-            elif str(request.decode('utf-8')) == 'NUMERO':
-                request = clientS.recv(1024)
-                response=str(NUMERO(str(request.decode('utf-8'))))
-
-            elif str(request.decode('utf-8')) == 'KONVERTO':
-                request = clientS.recv(1024).decode('utf-8')
-                mode=str(request.split(' ')[0])
-                number=int(request.split(' ')[1])
-                response= str(KONVERTO(mode,number))
-        
-            elif str(request.decode('utf-8')) == 'PERFUNDO':
-                print("Lidhja me klientin "+ str(addr)+" është shkëputur!\n")
-                break
-
-            else: 
-                response ="Kjo është një kërkesë jo valide!"
-        
-            print('Pergjigjja nga serveri --> '+response+"\n")
-            clientS.sendall(str.encode(response))
-        
-        except socket.error as err: 
-            print("Ka ndodhur një gabim gjatë pranimit të kërkesës së klientit\n")
+            request = clientS.recv(128)
+        except socket.error as err:
             print(str(err))
             break
+            
+        request=str(request.decode('utf-8'))
+        if len(request)<=0:
+            break
+        print("Kerkesa nga klienti: "+ request+"\n") 
+            
+        response = ''
+        if request== 'KOHA':
+            response = str(KOHA())
+
+        elif request == 'IP':
+            response= str(IP())
+
+        elif request == 'NRPORTIT':
+            response= str(NRPORTIT())
+
+        elif request=='PALINDROM':
+            response="Nuk keni dhene asnje tekst!"
+        elif request.split(" ",1)[0] == 'PALINDROM':
+            txt=request.split(" ",1)[1]
+            response=str(PALINDROM(txt))
+
+        elif request == 'LOJA':
+            response= str(LOJA())
         
-    clientS.close()
+        elif request=='ANASJELLTAS':
+            response="Nuk keni dhene asnje tekst!"
+        elif request.split(" ",1)[0] == 'ANASJELLTAS':
+            txt=request.split(" ",1)[1]
+            print(txt)
+            response=str(ANASJELLTAS(txt))
+
+        elif request == 'GCF':
+            response="Duhet te jepni 2 numra!"
+        elif request.split(" ")[0] == 'GCF':      
+            num1=int(request.split(' ')[1])
+            num2=int(request.split(' ')[2])
+            response= str(GCF(num1,num2))
+
+        elif request == 'NUMERO':
+            response="Nuk keni dhene asnje tekst!"
+        elif request.split(" ",1)[0] == 'NUMERO':
+            response=str(NUMERO(request.split(" ",1)[1]))
+
+        elif request == 'KONVERTO':
+            response=("\nModet e konvertimit:\n"+
+                "1.PÃ«r konvertimin cm nÃ« inch shtypni cmNeInch\n"+
+                "2.PÃ«r konvertimin inch nÃ« cm shtypni inchNeCm\n"+
+                "3.PÃ«r konvertimin km nÃ« milje shtypni kmNeMiles\n"+
+                "4.PÃ«r konvertimin milje nÃ« km shtypni mileNeKm\n\n"+
+                "Shtypni modin e konvertimit dhe numrin qe deshironi ta konvertoni si: "+
+                "KONVERTO{Hapesire}{Modi}{Hapesire}{Numri}")
+            
+        elif request.split(' ')[0] == 'KONVERTO':
+            mode=str(request.split(' ')[1])
+            number=int(request.split(' ')[2])
+            response= str(KONVERTO(mode,number))
        
-  
-while True:
-    clientS, addr = serverSocket.accept()
-    print("\n--------------------------------------------------------------------------------")
-    print("Serveri është lidhur me klientin: "+str(addr))
-    newThread=threading.Thread(target=handle_connections,args=(clientS,addr))
-    newThread.start()
-    print("Numri i klientëve aktiv: " + str(threading.activeCount() - 1))
-    print("\n--------------------------------------------------------------------------------")
-   
-serverSocket.close()
+        elif request == 'THENJA':
+            response= str(THENJA())
 
-import socket
-import threading 
-import random
-import math 
-import re
-from datetime import datetime
+        elif request== 'FIBONACCI':
+            response="Duhet te jepni numrin e termave te serise"
+        elif request.split(' ')[0] == 'FIBONACCI':
+            n=request.split(' ')[1]
+            response= str(FIBONACCI(n))
 
+        elif request == 'PERFUNDO':
+            print("Lidhja me klientin "+ str(addr)+" eshte shkeputur!\n")
+            break
 
-serverName = '127.0.0.1'
-serverPort = 14000
-address=(serverName,serverPort)
-
-try:
-    serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    serverSocket.bind(address)
-    print("\nServeri është startuar në localhost në portin " + str(serverPort)+".")
-    serverSocket.listen(50) 
-    print("\nServeri është duke punuar dhe është duke pritur për ndonjë kërkesë!")
-
-except socket.error as err: 
-    print(str(err))
-
-def handle_connections(clientS,addr): 
-    
-    def IP(): 
-        return "IP adresa e klientit është: "+str(addr[0])
-
-    def NRPORTIT(): 
-        return "Klienti është duke përdorur portin: "+str(addr[1])
-
-    def ANASJELLTAS(x):
-        return "Teksti i kthyer anasjelltas: "+ x[::-1] 
-
-    def PALINDROM(text):
-        reversedText=ANASJELLTAS(text)
-        if  reversedText==text: 
-            return "Teksti i dhënë është palindrom."
         else: 
-            return "Teksti i dhënë nuk është palindrom."
-
-    def LOJA():
-        listOfNumbers = []
-        for number in range(0,5):
-            number = random.randint(1,35)
-            listOfNumbers.append(number) 
-            listOfNumbers.sort()
-        return "5 numra të plotë dhe të sortuar, nga rangu 1-35:\n"+str(listOfNumbers)
-
-    def KOHA():
-        currDateTime=datetime.now()
-        currDateTimeFormat=currDateTime.strftime("%d/%m/%Y, %H:%M:%S")
-        return "Data dhe koha aktuale: "+currdatetimeFormat
-    
-    def NUMERO(text):
-        text = re.sub(r"[^a-zA-ZëË]"," ",text)
-        vowel=0
-        constant=0
-        for i in text: 
-            if i=="a" or i=="e" or i=="ë" or i=="i" or i=="o" or i=="u" or i=="y"or  i=="A" or i=="E"  or i=="Ë" or i=="I" or i=="O" or i=="U" or i=="Y":
-                vowel+=1      
-            else: 
-                constant+=1
-        return "Teksti i dhënë ka "+ str(vowel)+ " zanore dhe "+str(constant)+" bashkëtingëllore"
-    
-    def GCF(num1,num2):
-        gcdResult=math.gcd(num1,num2)
-        return "Faktori më i madhë i përbashkët i dy numrave të dhënë është: "+str(gcdResult)
-
-    def KONVERTO(mode,number):
-        converted=0
-        if mode=="cmNeInch":  
-            converted=number/2.54
-            return "Numri "+str(number)+" cm, i konvertuar në inch= "+str(round(converted, 3)) 
-        elif mode=="inchNeCm":  
-            converted=number*2.54
-            return "Numri "+str(number)+" inch, i konvertuar në cm= "+str(round(converted, 3))
-        elif mode=="kmNeMiles":  
-            converted=number*0.621371
-            return "Numri "+str(number)+" km, i konvertuar në milje= "+str(round(converted, 3))
-        elif mode=="mileNeKm":  
-            converted=number/0.621371
-            return "Numri "+str(number)+" milje, i konvertuar në km= "+str(round(converted, 3))
-        else:
-            return "Ky konvertim nuk ekziston!"
-
-    while True:
-        try:
-            request = clientS.recv(1024)
-            print("Kërkesa nga klienti: "+ str(request.decode('utf-8'))+"\n") 
-            if len(request)<=0:
-                break
-            response = ''
-            if str(request.decode('utf-8')) == 'KOHA':
-                response = str(KOHA())
-
-            elif str(request.decode('utf-8')) == 'IP':
-                response= str(IP())
-
-            elif str(request.decode('utf-8')) == 'NRPORTIT':
-                response= str(NRPORTIT())
-
-            elif str(request.decode('utf-8')) == 'PALINDROM':
-                request = clientS.recv(1024)
-                response=str(PALINDROM(str(request.decode('utf-8'))))
-
-            elif str(request.decode('utf-8')) == 'LOJA':
-                response= str(LOJA())
-
-            elif str(request.decode('utf-8')) == 'ANASJELLTAS':
-                request = clientS.recv(1024)
-                response=str(ANASJELLTAS(str(request.decode('utf-8'))))
-
-            elif str(request.decode('utf-8')) == 'GCF':
-                request = clientS.recv(1024).decode('utf-8')
-                num1=int(request.split(' ')[0])
-                num2=int(request.split(' ')[1])
-                response= str(GCF(num1,num2))
-
-            elif str(request.decode('utf-8')) == 'NUMERO':
-                request = clientS.recv(1024)
-                response=str(NUMERO(str(request.decode('utf-8'))))
-
-            elif str(request.decode('utf-8')) == 'KONVERTO':
-                request = clientS.recv(1024).decode('utf-8')
-                mode=str(request.split(' ')[0])
-                number=int(request.split(' ')[1])
-                response= str(KONVERTO(mode,number))
+            response ="Kjo eshte nje kerkese jo valide!"
         
-            elif str(request.decode('utf-8')) == 'PERFUNDO':
-                print("Lidhja me klientin "+ str(addr)+" është shkëputur!\n")
-                break
-
-            else: 
-                response ="Kjo është një kërkesë jo valide!"
-        
-            print('Pergjigjja nga serveri --> '+response+"\n")
-            clientS.sendall(str.encode(response))
-        
-        except socket.error as err: 
-            print("Ka ndodhur një gabim gjatë pranimit të kërkesës së klientit\n")
-            print(str(err))
-            break
+        print('Pergjigjja nga serveri --> '+str(response)+"\n")
+        clientS.sendall(str.encode(response))
         
     clientS.close()
        
-  
-while True:
-    clientS, addr = serverSocket.accept()
-    print("\n--------------------------------------------------------------------------------")
-    print("Serveri është lidhur me klientin: "+str(addr))
-    newThread=threading.Thread(target=handle_connections,args=(clientS,addr))
-    newThread.start()
-    print("Numri i klientëve aktiv: " + str(threading.activeCount() - 1))
-    print("\n--------------------------------------------------------------------------------")
-   
-serverSocket.close()
+  #Krijimi i threadit 
+while True:  
+    try:
+        clientS, addr = serverSocket.accept()
+        print("\n--------------------------------------------------------------------------------")
+        print("Serveri eshte lidhur me klientin: "+str(addr))
+        newThread=threading.Thread(target=handle_connections,args=(clientS,addr))
+        newThread.start()
+        print("Numri i klienteve aktiv: " + str(threading.activeCount() - 1))
+        print("\n--------------------------------------------------------------------------------")
+    except socket.error as err: 
+        print(str(err))
 
-import socket
-import threading 
-import random
-import math 
-import re
-from datetime import datetime
+serverSocket.close()  #Mbyllja e soket serverit 
 
-
-serverName = '127.0.0.1'
-serverPort = 14000
-address=(serverName,serverPort)
-
-try:
-    serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    serverSocket.bind(address)
-    print("\nServeri është startuar në localhost në portin " + str(serverPort)+".")
-    serverSocket.listen(50) 
-    print("\nServeri është duke punuar dhe është duke pritur për ndonjë kërkesë!")
-
-except socket.error as err: 
-    print(str(err))
-
-def handle_connections(clientS,addr): 
-    
-    def IP(): 
-        return "IP adresa e klientit është: "+str(addr[0])
-
-    def NRPORTIT(): 
-        return "Klienti është duke përdorur portin: "+str(addr[1])
-
-    def ANASJELLTAS(x):
-        return "Teksti i kthyer anasjelltas: "+ x[::-1] 
-
-    def PALINDROM(text):
-        reversedText=ANASJELLTAS(text)
-        if  reversedText==text: 
-            return "Teksti i dhënë është palindrom."
-        else: 
-            return "Teksti i dhënë nuk është palindrom."
-
-    def LOJA():
-        listOfNumbers = []
-        for number in range(0,5):
-            number = random.randint(1,35)
-            listOfNumbers.append(number) 
-            listOfNumbers.sort()
-        return "5 numra të plotë dhe të sortuar, nga rangu 1-35:\n"+str(listOfNumbers)
-
-    def KOHA():
-        currDateTime=datetime.now()
-        currDateTimeFormat=currDateTime.strftime("%d/%m/%Y, %H:%M:%S")
-        return "Data dhe koha aktuale: "+currdatetimeFormat
-    
-    def NUMERO(text):
-        text = re.sub(r"[^a-zA-ZëË]"," ",text)
-        vowel=0
-        constant=0
-        for i in text: 
-            if i=="a" or i=="e" or i=="ë" or i=="i" or i=="o" or i=="u" or i=="y"or  i=="A" or i=="E"  or i=="Ë" or i=="I" or i=="O" or i=="U" or i=="Y":
-                vowel+=1      
-            else: 
-                constant+=1
-        return "Teksti i dhënë ka "+ str(vowel)+ " zanore dhe "+str(constant)+" bashkëtingëllore"
-    
-    def GCF(num1,num2):
-        gcdResult=math.gcd(num1,num2)
-        return "Faktori më i madhë i përbashkët i dy numrave të dhënë është: "+str(gcdResult)
-
-    def KONVERTO(mode,number):
-        converted=0
-        if mode=="cmNeInch":  
-            converted=number/2.54
-            return "Numri "+str(number)+" cm, i konvertuar në inch= "+str(round(converted, 3)) 
-        elif mode=="inchNeCm":  
-            converted=number*2.54
-            return "Numri "+str(number)+" inch, i konvertuar në cm= "+str(round(converted, 3))
-        elif mode=="kmNeMiles":  
-            converted=number*0.621371
-            return "Numri "+str(number)+" km, i konvertuar në milje= "+str(round(converted, 3))
-        elif mode=="mileNeKm":  
-            converted=number/0.621371
-            return "Numri "+str(number)+" milje, i konvertuar në km= "+str(round(converted, 3))
-        else:
-            return "Ky konvertim nuk ekziston!"
-
-    while True:
-        try:
-            request = clientS.recv(1024)
-            print("Kërkesa nga klienti: "+ str(request.decode('utf-8'))+"\n") 
-            if len(request)<=0:
-                break
-            response = ''
-            if str(request.decode('utf-8')) == 'KOHA':
-                response = str(KOHA())
-
-            elif str(request.decode('utf-8')) == 'IP':
-                response= str(IP())
-
-            elif str(request.decode('utf-8')) == 'NRPORTIT':
-                response= str(NRPORTIT())
-
-            elif str(request.decode('utf-8')) == 'PALINDROM':
-                request = clientS.recv(1024)
-                response=str(PALINDROM(str(request.decode('utf-8'))))
-
-            elif str(request.decode('utf-8')) == 'LOJA':
-                response= str(LOJA())
-
-            elif str(request.decode('utf-8')) == 'ANASJELLTAS':
-                request = clientS.recv(1024)
-                response=str(ANASJELLTAS(str(request.decode('utf-8'))))
-
-            elif str(request.decode('utf-8')) == 'GCF':
-                request = clientS.recv(1024).decode('utf-8')
-                num1=int(request.split(' ')[0])
-                num2=int(request.split(' ')[1])
-                response= str(GCF(num1,num2))
-
-            elif str(request.decode('utf-8')) == 'NUMERO':
-                request = clientS.recv(1024)
-                response=str(NUMERO(str(request.decode('utf-8'))))
-
-            elif str(request.decode('utf-8')) == 'KONVERTO':
-                request = clientS.recv(1024).decode('utf-8')
-                mode=str(request.split(' ')[0])
-                number=int(request.split(' ')[1])
-                response= str(KONVERTO(mode,number))
-        
-            elif str(request.decode('utf-8')) == 'PERFUNDO':
-                print("Lidhja me klientin "+ str(addr)+" është shkëputur!\n")
-                break
-
-            else: 
-                response ="Kjo është një kërkesë jo valide!"
-        
-            print('Pergjigjja nga serveri --> '+response+"\n")
-            clientS.sendall(str.encode(response))
-        
-        except socket.error as err: 
-            print("Ka ndodhur një gabim gjatë pranimit të kërkesës së klientit\n")
-            print(str(err))
-            break
-        
-    clientS.close()
-       
-  
-while True:
-    clientS, addr = serverSocket.accept()
-    print("\n--------------------------------------------------------------------------------")
-    print("Serveri është lidhur me klientin: "+str(addr))
-    newThread=threading.Thread(target=handle_connections,args=(clientS,addr))
-    newThread.start()
-    print("Numri i klientëve aktiv: " + str(threading.activeCount() - 1))
-    print("\n--------------------------------------------------------------------------------")
-   
-serverSocket.close()
-
+S
