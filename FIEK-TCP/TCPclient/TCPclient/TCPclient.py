@@ -10,19 +10,19 @@ serverPort = 14000          #Porti
 address=(serverName,serverPort)     #Adresa eshte qift i hostit dhe portit 
 
  
-#Krijimi i soketit. Argumentet e pasuara në socket () specifikojnë familjen e adresave dhe llojin e soketit
-#AF_INET është familja e adresave për IPv4. SOCK_STREAM është lloji i soketit për TCP protokollin
+#Krijimi i soketit. Argumentet e pasuara në socket () specifikojne familjen e adresave dhe llojin e soketit
+#AF_INET eshte familja e adresave per IPv4. SOCK_STREAM eshte lloji i soketit per TCP protokollin
 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
 try:
     clientSocket.connect(address)       #Klienti tenton te lidhet me serverin permes metodes connect(), ku si parameter e merr adresen(hosti,porti)
 
 except socket.error as err:             #Nese ndodh gabim gjate lidhjes me serverin, shfaqet gabimi dhe sistemi behet exit
-     print("\nKa ndodhur një gabim gjatë lidhjës me serverin!\n")   
+     print("\nKa ndodhur nje gabim gjate lidhjes me serverin!\n")   
      print(str(err))
      time.sleep(3)
      sys.exit()   
 line="--------------------------------------------------------------------------------"
-print("\nJeni lidhur me serverin, mund të zgjedhni njërin nga operacionet e mëposhtme!\n\n"
+print("\nJeni lidhur me serverin, mund të zgjedhni njerin nga operacionet e meposhtme!\n\n"
       +"Operacionet:\n\n"+line 
       +"1.IP - per ta zgjedhur shtypni IP\n"+line
       +"2.NRPORTIT - per ta zgjedhur shtypni NRPORTIT\n"+line
@@ -35,7 +35,7 @@ print("\nJeni lidhur me serverin, mund të zgjedhni njërin nga operacionet e m�
       +"9.KONVERTO - per ta zgjedhur shtypni {Hapesire}{Modi}{Hapesire}{Numri}\n"+line
       +"10.THENJA - per ta zgjedhur shtypni THENJA\n"+line
       +"11.FIBONACCI - per ta zgjedhur shtypni FIBONACCI{Hapesire}Numri i termave\n"+line
-      +"Shtypni PERFUNDO ose vetem tastin ENTER për ta mbyllur programin.\n"+line)
+      +"Shtypni PERFUNDO ose vetem tastin ENTER per ta mbyllur programin.\n"+line)
 
 message=" "
 while True:    #Unaze e pafundme

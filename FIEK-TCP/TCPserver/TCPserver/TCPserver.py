@@ -11,8 +11,8 @@ serverName = '127.0.0.1' #IP
 serverPort = 14000       #Porti
 address=(serverName,serverPort)  #Adresa eshte qift i hostit dhe portit 
 
-#Krijimi i soketit. Argumentet e pasuara në socket () specifikojnë familjen e adresave dhe llojin e soketit
-#AF_INET është familja e adresave për IPv4. SOCK_STREAM është lloji i soketit për TCP protokollin
+#Krijimi i soketit. Argumentet e pasuara në socket () specifikojne familjen e adresave dhe llojin e soketit
+#AF_INET eshte familja e adresave per IPv4. SOCK_STREAM është lloji i soketit per TCP protokollin
 try:
     serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 except socket.error as err: #Nese ndodh gabim gjate krijimit te soketit, shfaqet gabimi
