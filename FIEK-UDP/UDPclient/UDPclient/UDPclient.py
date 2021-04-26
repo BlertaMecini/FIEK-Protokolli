@@ -7,9 +7,7 @@ import time       #Importojme librarine time
 
 serverName = '127.0.0.1'    #IP
 serverPort = 14000          #Porti 
-address=(serverName,serverPort)     #Adresa eshte qift i hostit dhe portit 
-serverAddress=("127.0.0.1",14000)   #Adresa e serverit 
- 
+
 #Krijimi i soketit. Argumentet e pasuara ne socket () specifikojne familjen e adresave dhe llojin e soketit
 #AF_INET eshte familja e adresave per IPv4. SOCK_DGRAM eshte lloji i soketit per UDP protokollin
 try:
@@ -19,6 +17,26 @@ except socket.error as err:  #Nese ndodh gabim, shfaqet gabimi dhe mbyllet siste
     print(str(err))
     time.sleep(1)
     sys.exit()
+
+#Kerkojme nga klienti te jep pergjigjie nese deshiron apo jo ta ndrorroj adresen e serverit
+print("-------Mire se erdhet ne FIEK Protokollin!-------\n\nAdresa e serverit eshte: "+str(serverName)+", "+str(serverPort))
+answer=input("\nDeshironi ta nderroni adresen e serverit? Shtyp PO ose JO: ")
+
+if answer=="PO":
+        serverName=str(input("\nIP? "))   #IP
+        serverPort=int(input("\nPORTI? "))    #Porti 
+
+elif answer=="JO":
+        serverName = '127.0.0.1'    #IP
+        serverPort = 14000          #Porti 
+else:
+       print("\nNuk keni shtypur as PO as JO,prandaj po vazhdojme me vlera default! ")
+       time.sleep(1)
+       serverName = '127.0.0.1'    #IP
+       serverPort = 14000          #Porti
+
+serverAddress=(serverName,serverPort)     #Adresa eshte qift i hostit dhe portit 
+
 line="--------------------------------------------------------------------------------"
 print("\nJeni lidhur me serverin, mund te zgjedhni njerin nga operacionet e meposhtme!\n\n"
       +"Operacionet:\n\n"+line 
@@ -35,31 +53,32 @@ print("\nJeni lidhur me serverin, mund te zgjedhni njerin nga operacionet e mepo
       +"11.FIBONACCI - per ta zgjedhur shtypni FIBONACCI{Hapesire}Numri i termave\n"+line
       +"Shtypni vetem tastin ENTER per ta mbyllur programin.\n"+line)
 
-message=" "
+connected=True
+while connected:
+    request = input("Kerkesa juaj? ")   #Kerkojme nga klienti te shkruaj kerkesen 
 
-request = input("Kerkesa juaj? ")   #Kerkojme nga klienti te shkruaj kerkesen 
+    if not request:        #Nese klienti nuk jep ndonje kerkese por vetem shtyp enter, programi mbyllet 
+        print("\nNuk keni dhene asnje kerkese prandaj programi po mbyllet...\n")
+        break
     
-try:  #Tentojme te dergojme kerkesen tek serveri permes sendto, ku kerkesa duhet te enkodohet (default ne formatin utf-8) dhe duhet te shkruhet adresa ku do ta dergojme
-    clientSocket.sendto(str.encode(request),serverAddress)
-except socket.error as err:         #Nese ndodh gabim, shfaqet gabimi
-    print("Ka ndodhur nje gabim gjate dergimit te kerkeses ne server!\n")
-    print(str(err)) 
-    time.sleep(1)
+    try:  #Tentojme te dergojme kerkesen tek serveri permes sendto, ku kerkesa duhet te enkodohet (default ne formatin utf-8) dhe duhet te shkruhet adresa ku do ta dergojme
+        clientSocket.sendto(str.encode(request),serverAddress)
+    except socket.error as err:         #Nese ndodh gabim, shfaqet gabimi
+        print("Ka ndodhur nje gabim gjate dergimit te kerkeses ne server!\n")
+        print(str(err))
+        break
 
-if not request:        #Nese klienti nuk jep ndonje kerkese por vetem shtyp enter, programi mbyllet 
-    print("\nNuk keni dhene asnje kerkese prandaj programi po mbyllet...\n")
-    clientSocket.close()
-    time.sleep(1)
-    sys.exit()
-try:          #Tentojme ta marrim pergjigjien nga serveri permes recvfrom   
-    receivedResponse,server=clientSocket.recvfrom(1024) 
-    message=receivedResponse.decode('utf-8')    #Dekodimi i pergjigjies se serverit 
+    try:          #Tentojme ta marrim pergjigjien nga serveri permes recvfrom   
+        receivedResponse,server=clientSocket.recvfrom(1024) 
+        message=receivedResponse.decode('utf-8')    #Dekodimi i pergjigjies se serverit 
+    except socket.error as err:        #Nese ndodh gabim, shfaqet gabimi 
+        print("Ka ndodhur nje gabim gjate pranimit te pergjigjies nga serveri!\n")
+        print(str(err))
+        break
+ 
     print("\nPergjigjia nga serveri --> ",str(message) ,"\n")     #Paraqitja ne ekran e pergjigjies se serverit
     print("-------------------------------------------------------------------------------")
- 
-except socket.error as err:        #Nese ndodh gabim, shfaqet gabimi 
-    print("Ka ndodhur nje gabim gjate pranimit te pergjigjies nga serveri!\n")
-    print(str(err))
-     
-finally:    
-    clientSocket.close()    #Mbyllja e soketit permes close
+    connected==False
+    break
+
+clientSocket.close()    #Mbyllja e soketit permes close

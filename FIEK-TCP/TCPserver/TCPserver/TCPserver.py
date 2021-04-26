@@ -1,5 +1,6 @@
 #-------------------SOCKET PROGRAMMING-------------------
 #Krijimi i server aplikacionit 
+
 import socket     #Importojme librarine per socket komunikim ne mes te klientit dhe serverit 
 import threading  #Importojme librarine per thread-a
 import random     #Importojme librarine per marrjen e vlerave te rastesishme 
@@ -17,10 +18,12 @@ try:
     serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 except socket.error as err: #Nese ndodh gabim gjate krijimit te soketit, shfaqet gabimi
     print(str(err))
+
 try: #Serveri tenton te lidhet me klientin permes metodes bind(), ku si parameter e merr adresen(hosti,porti)
     serverSocket.bind(address)
     print("\nServeri eshte startuar ne localhost ne portin " + str(serverPort)+".")
-    serverSocket.listen(50)           #Presim per kerkesa permes listen(), 50 paraqet nr e kerkesave qe mund te rrijne ne rend (queue)
+    serverSocket.listen(50)           #Presim per kerkesa permes listen(), 50 paraqet nr e kerkesave qe mund te 
+                                      #rrijne ne rend (queue)
     print("\nServeri eshte duke punuar dhe eshte duke pritur per ndonje kerkese!")
 
 except socket.error as err: #Nese ndodh gabim gjate lidhjes, shfaqet gabimi
@@ -42,6 +45,7 @@ def handle_connections(clientS,addr): #Metod per trajtimin e kerkesave te klient
             return "Teksti i kthyer anasjelltas: "+ x[::-1] 
         
     def PALINDROM(text): #Metoda PALINDROM tregon nese teksti shkruhet njejt ne te dyja anet, eshte palindrom
+        text = re.sub(r'[^a-zA-Z]','',text)
         reversedText=text[::-1] 
         if  reversedText==text: 
             return "Teksti i dhene eshte palindrom."
@@ -111,6 +115,7 @@ def handle_connections(clientS,addr): #Metod per trajtimin e kerkesave te klient
                     ,"Feminism isn't about making women stronger. Women are already strong, it's about changing the way the world perceives that strength."
                     ,"Two things are infinite: the universe and human stupidity; and I'm not sure about the universe."
                     ,"You only live once, but if you do it right, once is enough."]
+        
         return "Nje thenje e rastesishme: "+random.choice(quoteArray)
 
     def FIBONACCI(n): #Metoda FIBONACCI kthen sekuencen fibonacci per nr e termave te dhene 
@@ -139,11 +144,11 @@ def handle_connections(clientS,addr): #Metod per trajtimin e kerkesave te klient
             print(str(err))
             break
             
-        if len(request)<=0: 
+        if not request: 
             print("Klienti nuk ka dhene kerkese prandaj lidhja eshte mbyllur.")    
             break
 
-        request=str(request.decode('utf-8'))  #Dekodimi i kerkeses 
+        request=str(request.decode('utf-8'))  #Dekodimi i kerkeses  
         print("Kerkesa nga klienti: "+ request+"\n") 
         #Ne baze te kerkesave  thirrim metodat perkatese    
         response = ''
@@ -234,7 +239,7 @@ def handle_connections(clientS,addr): #Metod per trajtimin e kerkesave te klient
         
     clientS.close()
        
-  #Krijimi i threadit 
+#Krijimi i threadit 
 while True:  
     try:
         clientS, addr = serverSocket.accept()

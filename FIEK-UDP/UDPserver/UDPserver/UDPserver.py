@@ -1,5 +1,6 @@
 #-------------------SOCKET PROGRAMMING-------------------
 #Krijimi i server aplikacionit 
+
 import socket     #Importojme librarine per socket komunikim ne mes te klientit dhe serverit 
 import threading  #Importojme librarine per thread-a
 import random     #Importojme librarine per marrjen e vlerave te rastesishme 
@@ -10,6 +11,7 @@ from datetime import datetime  #Klasa datetime per daten dhe kohen
 serverName = '127.0.0.1' #IP 
 serverPort = 14000       #Porti
 address=(serverName,serverPort)  #Adresa eshte qift i hostit dhe portit 
+
 #Krijimi i soketit. Argumentet e pasuara ne socket () specifikojne familjen e adresave dhe llojin e soketit
 #AF_INET eshte familja e adresave per IPv4. SOCK_DGRAM eshte lloji i soketit per UDP protokollin
 try:
@@ -19,11 +21,11 @@ except socket.error as err:  #Nese ndodh gabim, shfaqet gabimi dhe mbyllet siste
         print(str(err))
         time.sleep(1)
         sys.exit()
+
 try: #Serveri tenton te lidhet me klientin permes metodes bind(), ku si parameter e merr adresen(hosti,porti)
     serverSocket.bind(address)
     print("\nServeri eshte startuar ne localhost ne portin " + str(serverPort)+".")
     print("\nServeri eshte duke punuar dhe eshte duke pritur per ndonje kerkese!")
-
 except socket.error as err: #Nese ndodh gabim gjate lidhjes, shfaqet gabimi
     print(str(err))
     
@@ -41,6 +43,7 @@ def ANASJELLTAS(x): #Metoda ANASJELLTAS tekstin e dhene e kthen anasjelltas (rev
         return "Teksti i kthyer anasjelltas: "+ x[::-1] 
         
 def PALINDROM(text): #Metoda PALINDROM tregon nese teksti shkruhet njejt ne te dyja anet, eshte palindrom
+    text = re.sub(r'[^a-zA-Z]','',text)
     reversedText=text[::-1] 
     if  reversedText==text: 
         return "Teksti i dhene eshte palindrom."
@@ -111,6 +114,7 @@ def THENJA():  #Metoda THENJA kthen nje thenje te rastesishme nga nje varg i the
                 ,"Feminism isn't about making women stronger. Women are already strong, it's about changing the way the world perceives that strength."
                 ,"Two things are infinite: the universe and human stupidity; and I'm not sure about the universe."
                 ,"You only live once, but if you do it right, once is enough."]
+   
     return "Nje thenje e rastesishme: "+random.choice(quoteArray)
 
 def FIBONACCI(n): #Metoda FIBONACCI kthen sekuencen fibonacci per nr e termave te dhene 
@@ -131,9 +135,9 @@ def FIBONACCI(n): #Metoda FIBONACCI kthen sekuencen fibonacci per nr e termave t
         i+=1
     return "Sekuenca Fibonacci: "+ result
 
-       
+#Unaze e pafundme. Ketu tentojme te marrim kerkesat e klientit, dhe te kthejme pergjigjien adekuate
 while True:  
-    print("\n--------------------------------------------------------------------------------")
+    print("--------------------------------------------------------------------------------")
     try:
         request,addr = serverSocket.recvfrom(128)
         print("\nJeni lidhur me klientin: "+str(addr))
@@ -147,7 +151,8 @@ while True:
         continue
 
     request=str(request.decode('utf-8'))  #Dekodimi i kerkeses 
-    print("Kerkesa nga klienti: "+ request+"\n") 
+    print("\nKerkesa nga klienti: "+ request+"\n")
+    
     #Ne baze te kerkesave  thirrim metodat perkatese
     response = ''
     if request== 'KOHA':

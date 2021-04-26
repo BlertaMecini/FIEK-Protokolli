@@ -4,7 +4,7 @@ Protokolli FIEK është një protokoll shumë i thjeshtë që i lejon klientit d
 është një protokoll standard. Është TCP versioni i cili quhet FIEK-TCP dhe UDP versioni i cili quhet FIEK-UDP.
 Protokolli FIEK përmban këto kërkesa (metoda): IP, NRPORT, NUMERO, ANASJELLTAS, PALINDROM, KOHA, LOJA,
 KONVERTO, GCF,THENJA,FIBONACCI dhe PERFUNDO te cilat mund te dërgohen nga klienti tek serveri. Serveri përgjigjet me një mesazh i cili është
-specifik për secilën kërkesë (metode). Serveri i injoron kërkesat jovalide dhe nuk duhet dështon në rast
+specifik për secilën kërkesë (metode). Serveri i injoron kërkesat jovalide dhe nuk dështon në rast
 se pranon një kërkesë te tillë.
 ### FIEK-TCP
 Për të bërë një kërkesë, klienti FIEK-TCP se pari vendos një lidhje TCP me FIEK-TCP serverin.
@@ -22,13 +22,14 @@ Klienti është në gjendje të thërras kërkesat dhe të merr përgjigjie nga 
 
 ### Veglat e përdorura
 * Python 3.6
-* Visual Studio 2015
+* Visual Studio 2019
 * Librari të gatshme në Python 
+* Sistemi Operativ Windows 7
 
 ### Kontribuesit 
 [BlertaMecini](https://github.com/BlertaMecini)
-<a href="https://github.com/BlertaMecini/FIEK-protokolli/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=FIEK-protokolli/INT20_21_Gr16">
+<a href = "https://github.com/BlertaMecini/FIEK-protokolli/graphs/contributors">
+<img src = "https://contrib.rocks/image?repo=BlertaMecini/FIEK-protolli"/>
 </a>
 ### Licensa 
 Ky projekt është i licensuar nën licensën MIT - shikoni skedarin [LICENSE.md](https://github.com/BlertaMecini/FIEK-Protokolli/blob/main/LICENSE) për detaje.

@@ -9,17 +9,42 @@ serverName = '127.0.0.1'    #IP
 serverPort = 14000          #Porti 
 address=(serverName,serverPort)     #Adresa eshte qift i hostit dhe portit 
 
- 
 #Krijimi i soketit. Argumentet e pasuara në socket () specifikojne familjen e adresave dhe llojin e soketit
 #AF_INET eshte familja e adresave per IPv4. SOCK_STREAM eshte lloji i soketit per TCP protokollin
-clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+try:
+    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+except socket.error as err:  #Nese ndodh gabim, shfaqet gabimi dhe mbyllet sistemi
+    print("Soketi nuk ka mundur te krijohet!") 
+    print(str(err))
+    time.sleep(1)
+    sys.exit()
+
+#Kerkojme nga klienti te jep pergjigjie nese deshiron apo jo ta ndrorroj adresen e serverit
+print("-------Mire se erdhet ne FIEK Protokollin!-------\n\nAdresa e serverit eshte:"+str(serverName)+", "+str(serverPort))
+answer=input("\nDeshironi ta nderroni adresen e serverit? Shtyp PO ose JO: ")
+
+if answer=="PO":
+        serverName=str(input("\nIP? "))   #IP
+        serverPort=int(input("\nPORTI? "))    #Porti 
+
+elif answer=="JO":
+        serverName = '127.0.0.1'    #IP
+        serverPort = 14000          #Porti 
+else:
+       print("\nNuk keni shtypur as PO as JO,prandaj po vazhdojme me vlera default! ")
+       time.sleep(1)
+       serverName = '127.0.0.1'    #IP
+       serverPort = 14000          #Porti
+
+address=(serverName,serverPort)     #Adresa eshte qift i hostit dhe portit 
+
 try:
     clientSocket.connect(address)       #Klienti tenton te lidhet me serverin permes metodes connect(), ku si parameter e merr adresen(hosti,porti)
-
+      
 except socket.error as err:             #Nese ndodh gabim gjate lidhjes me serverin, shfaqet gabimi dhe sistemi behet exit
      print("\nKa ndodhur nje gabim gjate lidhjes me serverin!\n")   
      print(str(err))
-     time.sleep(3)
+     time.sleep(2)
      sys.exit()   
 line="--------------------------------------------------------------------------------"
 print("\nJeni lidhur me serverin, mund të zgjedhni njerin nga operacionet e meposhtme!\n\n"
@@ -40,16 +65,19 @@ print("\nJeni lidhur me serverin, mund të zgjedhni njerin nga operacionet e mep
 message=" "
 while True:    #Unaze e pafundme
     request = input("Kerkesa juaj? ")   #Kerkojme nga klienti te shkruaj kerkesen 
+
     try:  #Tentojme te dergojme kerkesen tek serveri permes sendall, ku kerkesa duhet te enkodohet (default ne formatin utf-8)
         clientSocket.sendall(str.encode(request))
     except socket.error as err:         #Nese ndodh gabim, shfaqet gabimi dhe mbyllet soketi
         print("Ka ndodhur nje gabim gjate dergimit te kerkeses ne server!\n")
         print(str(err))
         break 
+
     if not request:                     #Nese klienti nuk jep ndonje kerkese por vetem shtyp enter, soketi mbyllet 
         print("\nNuk keni dhene asnje kerkese prandaj programi po mbyllet...\n")
         time.sleep(1)
         break
+
     try:  # Tentojme ta marrim pergjigjien nga serveri permes recv   
         receivedResponse=clientSocket.recv(1024)  
     except socket.error as err:        #Nese ndodh gabim, shfaqet gabimi dhe mbyllet soketi
@@ -57,7 +85,7 @@ while True:    #Unaze e pafundme
         print(str(err))
         break 
     
-    if len(receivedResponse) <= 0:
+    if len(receivedResponse) <= 0:       
         break
     message=receivedResponse.decode('utf-8')   #Dekodimi i pergjigjies se serverit 
     print("\nPërgjigjia nga serveri --> ",str(message) ,"\n")     #Paraqitja ne ekran e pergjigjies se serverit
