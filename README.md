@@ -28,8 +28,8 @@ Klienti është në gjendje të thërras kërkesat dhe të merr përgjigjie nga 
 
 ### Kontribuesit 
 [BlertaMecini](https://github.com/BlertaMecini)
-<a href = "https://github.com/BlertaMecini/FIEK-protokolli/graphs/contributors">
-<img src = "https://contrib.rocks/image?repo=BlertaMecini/FIEK-protolli"/>
+<a href = "https://github.com/BlertaMecini/FIEK-Protokolli/graphs/contributors">
+<img src = "https://contrib.rocks/image?repo=BlertaMecini/FIEK-Protokolli"/>
 </a>
 ### Licensa 
 Ky projekt është i licensuar nën licensën MIT - shikoni skedarin [LICENSE.md](https://github.com/BlertaMecini/FIEK-Protokolli/blob/main/LICENSE) për detaje.
