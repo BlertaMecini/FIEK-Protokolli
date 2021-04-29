@@ -140,7 +140,7 @@ while True:
     print("--------------------------------------------------------------------------------")
     try:
         request,addr = serverSocket.recvfrom(128)
-        print("\nJeni lidhur me klientin: "+str(addr))
+        print("Jeni lidhur me klientin: "+str(addr))
     except socket.error as err:
         print("Ka ndodhur gabim gjate pranimit te kerkeses se klientit!")
         print(str(err))
@@ -155,80 +155,82 @@ while True:
     
     #Ne baze te kerkesave  thirrim metodat perkatese
     response = ''
-    if request== 'KOHA':
+    if request== 'KOHA' or request== 'koha':
         response = str(KOHA())
 
-    elif request == 'IP':
+    elif request == 'IP' or request == 'ip':
         response= str(IP())
 
-    elif request == 'NRPORTIT':
+    elif request == 'NRPORTIT'or request == 'nrportit':
         response= str(NRPORTIT())
 
-    elif request=='PALINDROM' or request=='PALINDROM ':
-         response="Nuk keni dhene asnje tekst!"
-    elif request.split(" ",1)[0] == 'PALINDROM':
-         if re.match("^[0-9 ]+$",request.split(" ",1)[1]):
+    elif request=='PALINDROM' or request=='PALINDROM ' or request=='palindrom' or request=='palindrom ' :
+        response="Nuk keni dhene asnje tekst!"
+    elif request.split(" ",1)[0] == 'PALINDROM' or request.split(" ",1)[0] == 'palindrom':
+        if re.match("^[0-9 ]+$",request.split(" ",1)[1]):
             response="Keni dhene vetem hapesira dhe/ose numra!"
-         else:
+        else:
             txt=request.split(" ",1)[1]
             response=str(PALINDROM(txt))
 
-    elif request == 'LOJA':
+    elif request == 'LOJA' or request == 'loja':
         response= str(LOJA())
         
-    elif request=='ANASJELLTAS':
+    elif request=='ANASJELLTAS' or request=='anasjelltas':
         response="Nuk keni dhene asnje tekst!"
-    elif request.split(" ",1)[0] == 'ANASJELLTAS':
-         txt=request.split(" ",1)[1]
-         print(txt)
-         response=str(ANASJELLTAS(txt))
+    elif request.split(" ",1)[0] == 'ANASJELLTAS'or request.split(" ",1)[0] == 'anasjelltas':
+        txt=request.split(" ",1)[1]
+        response=str(ANASJELLTAS(txt))
 
-    elif request == 'GCF':
-         response="Duhet te jepni 2 numra!"
-    elif request.split(" ",1)[0] == 'GCF':
-         numbers=request.split(" ",1)[1]   
-         num1=numbers.split(' ',1)[0]
-         
-         if len(numbers)<len(num1+" "):
+    elif request == 'GCF' or request == 'gcf':
+        response="Duhet te jepni 2 numra!"
+    elif request.split(" ",1)[0] == 'GCF' or request.split(" ",1)[0] == 'gcf':
+        numbers=request.split(" ",1)[1]   
+        num1=numbers.split(' ',1)[0]
+        if len(numbers)<len(num1+" "):
             response="Keni dhene vetem nje numer!"
-         else:
+        else:
             num2=numbers.split(' ',1)[1]
             response=str(GCF(num1,num2))
 
-    elif request == 'NUMERO' or request == 'NUMERO ' :
-         response="Nuk keni dhene asnje tekst!"
-    elif request.split(" ",1)[0] == 'NUMERO':
-         if re.match("^[0-9 ]+$",request.split(" ",1)[1]):
-             response="Keni dhene vetem hapesira dhe/ose numra!"
-         else:
-             response=str(NUMERO(request.split(" ",1)[1]))
+    elif request == 'NUMERO' or request == 'NUMERO ' or request == 'numero' or request == 'numero ':
+        response="Nuk keni dhene asnje tekst!"
+    elif request.split(" ",1)[0] == 'NUMERO' or request.split(" ",1)[0] == 'numero':
+        if re.match("^[0-9 ]+$",request.split(" ",1)[1]):
+            response="Keni dhene vetem hapesira dhe/ose numra!"
+        else:
+            response=str(NUMERO(request.split(" ",1)[1]))
 
-    elif request == 'KONVERTO':
-         response=("\nModet e konvertimit:\n"+
-                "1.Per konvertimin cm ne inch shtypni cmaNeInch\n"+
-                "2.Per konvertimin inch ne cm shtypni inchNeCm\n"+
-                "3.Per konvertimin km ne milje shtypni kmNeMiles\n"+
-                "4.Per konvertimin milje ne km shtypni mileNeKm\n\n"+
-                "Duhet ta shtypni modin e konvertimit dhe numrin qe deshironi ta konvertoni si: "+
-                "KONVERTO{Hapesire}{Modi}{Hapesire}{Numri}")
+    elif request == 'KONVERTO' or request=='konverto':
+        response=("\nModet e konvertimit:\n"+
+                    "1.Per konvertimin cm ne inch shtypni cmaNeInch\n"+
+                    "2.Per konvertimin inch ne cm shtypni inchNeCm\n"+
+                    "3.Per konvertimin km ne milje shtypni kmNeMiles\n"+
+                    "4.Per konvertimin milje ne km shtypni mileNeKm\n\n"+
+                    "Duhet ta shtypni modin e konvertimit dhe numrin qe deshironi ta konvertoni si: "+
+                    "KONVERTO{Hapesire}{Modi}{Hapesire}{Numri}")
             
-    elif request.split(' ',1)[0] == 'KONVERTO':
-         parameters=request.split(" ",1)[1]   
-         mode=parameters.split(' ',1)[0]
-         if len(parameters)<len(mode+" "):
+    elif request.split(' ',1)[0] == 'KONVERTO' or request.split(' ',1)[0] == 'konverto':
+        parameters=request.split(" ",1)[1]   
+        mode=parameters.split(' ',1)[0]
+        if len(parameters)<len(mode+" "):
             response="Keni dhene vetem modin e konvertimit!"
-         else:
+        else:
             num=parameters.split(' ',1)[1]
             response=str(KONVERTO(mode,num))
        
-    elif request == 'THENJA':
+    elif request == 'THENJA' or request == 'thenja':
         response= str(THENJA())
 
-    elif request== 'FIBONACCI' or request== 'FIBONACCI ':
+    elif request== 'FIBONACCI' or request== 'FIBONACCI ' or request== 'fibonacci' or request== 'fibonacci ':
         response="Duhet te jepni numrin e termave te serise"
-    elif request.split(' ',1)[0] == 'FIBONACCI':
+    elif request.split(' ',1)[0] == 'FIBONACCI' or request.split(' ',1)[0] == 'fibonacci ':
         n=request.split(' ',1)[1]
         response= str(FIBONACCI(n))
+
+    elif request == 'PERFUNDO' or request == 'perfundo':
+        print("Lidhja me klientin "+ str(addr)+" eshte shkeputur!\n")
+        continue
 
     else: 
         response ="Kjo eshte nje kerkese jo valide!"

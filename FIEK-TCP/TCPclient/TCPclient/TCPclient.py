@@ -23,11 +23,11 @@ except socket.error as err:  #Nese ndodh gabim, shfaqet gabimi dhe mbyllet siste
 print("-------Mire se erdhet ne FIEK Protokollin!-------\n\nAdresa e serverit eshte:"+str(serverName)+", "+str(serverPort))
 answer=input("\nDeshironi ta nderroni adresen e serverit? Shtyp PO ose JO: ")
 
-if answer=="PO":
+if answer=="PO" or answer=="po":
         serverName=str(input("\nIP? "))   #IP
         serverPort=int(input("\nPORTI? "))    #Porti 
 
-elif answer=="JO":
+elif answer=="JO" or answer=="jo":
         serverName = '127.0.0.1'    #IP
         serverPort = 14000          #Porti 
 else:
@@ -39,8 +39,8 @@ else:
 address=(serverName,serverPort)     #Adresa eshte qift i hostit dhe portit 
 
 try:
-    clientSocket.connect(address)       #Klienti tenton te lidhet me serverin permes metodes connect(), ku si parameter e merr adresen(hosti,porti)
-      
+    clientSocket.connect(address)       #Klienti tenton te lidhet me serverin permes metodes connect(), 
+                                        #ku si parameter e merr adresen(hosti,porti)  
 except socket.error as err:             #Nese ndodh gabim gjate lidhjes me serverin, shfaqet gabimi dhe sistemi behet exit
      print("\nKa ndodhur nje gabim gjate lidhjes me serverin!\n")   
      print(str(err))
